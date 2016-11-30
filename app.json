@@ -1,0 +1,493 @@
+{
+    "id": "nl.kikkert.plex",
+    "version": "1.2.0",
+    "compatibility": "0.x || 1.x",
+    "name": {
+        "en": "Plex",
+        "nl": "Plex"
+    },
+    "description": {
+        "en": "Control a plex media server with your Homey",
+        "nl": "Bestuur plex media server met je homey"
+    },
+    "category": "video",
+    "images": {
+        "large": "assets/images/large.png",
+        "small": "assets/images/small.png"
+    },
+    "author": {
+        "name": "Michiel Kikkert",
+        "email": "michiel@kikkert.nl"
+    },
+    "flow": {
+        "triggers": [
+            {
+                "id" : "media_playing",
+                "title": { 
+                    "en": "Plex starts playing"
+                }
+            },
+            {
+               "id" : "media_stopped",
+                "title": { 
+                    "en": "Plex stops playing"
+                }
+            },
+            {
+               "id" : "media_paused",
+                "title": { 
+                    "en": "Plex pauses"
+                } 
+            }
+
+        ],
+        "actions": [
+            {
+                "id": "playitemchrome",
+                "title": {
+                    "en": "Play Plex Media",
+                    "nl": "Speel Plex Media"
+                },
+                "fluidArgs": true,
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=chromecast"
+                    },
+                    {
+                        "name": "selected",
+                        "type": "autocomplete",
+                        "placeholder": {
+                            "en": "Find a media item"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "stopplayingchrome",
+                "title": {
+                    "en": "Stop Plex",
+                    "nl": "Stop Plex"
+                },
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=chromecast"
+                    }
+                ]
+            },
+            {
+                "id": "pausechrome",
+                "title": {
+                    "en": "Pause Plex",
+                    "nl": "Pauzeer Plex"
+                },
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=chromecast"
+                    }
+                ]
+            },
+            {
+                "id": "continuechrome",
+                "title": {
+                    "en": "Continue Plex",
+                    "nl": "Continueer Plex"
+                },
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=chromecast"
+                    }
+                ]
+            },
+            {
+                "id": "playitempht",
+                "title": {
+                    "en": "Play Plex Media",
+                    "nl": "Speel Plex Media"
+                },
+                "fluidArgs": true,
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=pht"
+                    },
+                    {
+                        "name": "selected",
+                        "type": "autocomplete",
+                        "placeholder": {
+                            "en": "Find a media item"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "stopplayingpht",
+                "title": {
+                    "en": "Stop Plex",
+                    "nl": "Stop Plex"
+                },
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=pht"
+                    }
+                ]
+            },
+            {
+                "id": "pausepht",
+                "title": {
+                    "en": "Pause Plex",
+                    "nl": "Pauzeer Plex"
+                },
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=pht"
+                    }
+                ]
+            },
+            {
+                "id": "continuepht",
+                "title": {
+                    "en": "Continue Plex",
+                    "nl": "Continueer Plex"
+                },
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=pht"
+                    }
+                ]
+            },
+            {
+                "id": "playitempmp",
+                "title": {
+                    "en": "Play Plex Media",
+                    "nl": "Speel Plex Media"
+                },
+                "fluidArgs": true,
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=pmp"
+                    },
+                    {
+                        "name": "selected",
+                        "type": "autocomplete",
+                        "placeholder": {
+                            "en": "Find a media item"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "stopplayingpmp",
+                "title": {
+                    "en": "Stop Plex",
+                    "nl": "Stop Plex"
+                },
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=pmp"
+                    }
+                ]
+            },
+            {
+                "id": "pausepmp",
+                "title": {
+                    "en": "Pause Plex",
+                    "nl": "Pauzeer Plex"
+                },
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=pmp"
+                    }
+                ]
+            },
+            {
+                "id": "continuepmp",
+                "title": {
+                    "en": "Continue Plex",
+                    "nl": "Continueer Plex"
+                },
+                "args": [
+                    {
+                        "name": "device",
+                        "type": "device",
+                        "filter": "driver_uri=homey:app:nl.kikkert.plex&driver_id=pmp"
+                    }
+                ]
+            }
+        ]
+    },
+    "speech": [
+        {
+            "id": "app|plex",
+            "importance": 1,
+            "triggers": {
+                "en": [
+                    "plex"
+                ],
+                "nl": [
+                    "plex"
+                ]
+            }
+        },
+        {
+            "id": "command|watch",
+            "importance": 0.8,
+            "triggers": {
+                "en": [
+                    "watch",
+                    "watch a movie",
+                    "watch a series",
+                    "plex",
+                    "view",
+                    "which"
+                ],
+                "nl": [
+                    "kijken",
+                    "kuiken",
+                    "kijk",
+                    "film kijken",
+                    "serie kijken",
+                    "plex"
+                ]
+            }
+        },
+        {
+            "id": "command|watchnextepisode",
+            "importance": 0.8,
+            "triggers": {
+                "en": [
+                    "next episode",
+                    "next episodes"
+                ],
+                "nl": [
+                    "volgende aflevering",
+                    "volgende aflevering kijken",
+                    "1 aflevering verder",
+                    "een aflevering verder"
+                ]
+            }
+        },
+        {
+            "id": "command|watchpreviousepisode",
+            "importance": 0.8,
+            "triggers": {
+                "en": [
+                    "previous episode",
+                    "previous episodes"
+                ],
+                "nl": [
+                    "vorige aflevering",
+                    "vorige aflevering kijken",
+                    "1 aflevering terug",
+                    "een aflevering terug"
+                ]
+            }
+        },
+        {
+            "id": "command|latest",
+            "importance": 0.5,
+            "triggers": {
+                "en": [
+                    "latest",
+                    "newest"
+                ],
+                "nl": [
+                    "laatste",
+                    "nieuwste"
+                ]
+            }
+        },
+        {
+            "id": "command|first",
+            "importance": 0.5,
+            "triggers": {
+                "en": [
+                    "first",
+                    "oldest"
+                ],
+                "nl": [
+                    "eerste",
+                    "oudste"
+                ]
+            }
+        },
+
+        {
+            "id": "command|random",
+            "importance": 0.5,
+            "triggers": {
+                "en": [
+                    "random"
+                ],
+                "nl": [
+                    "willekeurige",
+                    "willekeurig"
+                ]
+            }
+        },
+		{
+            "id": "command|refresh",
+            "importance": 0.8,
+            "triggers": {
+                "en": [
+                    "media refresh",
+                    "refresh media"
+                ],
+                "nl": [
+                    "media verversen",
+                    "ververs media",
+                    "media updaten"
+                ]
+            }
+        },
+        {
+            "id": "command|pause",
+            "importance": 0.5,
+            "triggers": {
+                "en": [
+                    "movie pause",
+                    "pause movie",
+                    "pauze movie",
+                    "pause episode",
+                    "pauze episode"
+                ],
+                "nl": [
+                    "film pauzeer",
+                    "pauzeer",
+                    "pauzeren",
+                    "pauzeer film",
+                    "pauzeer kijken",
+                    "pauzeren kijken",
+                    "kijken pauzeren",
+                    "film pauzeren",
+                    "film pauze",
+                    "pauzeer de film"
+                ]
+            }
+        },
+        {
+            "id": "command|continue",
+            "importance": 0.5,
+            "triggers": {
+                "en": [
+                    "movie continue",
+                    "movie play",
+                    "movieplay"
+                ],
+                "nl": [
+                    "film verder",
+                    "film ga verder",
+                    "film vervolgen",
+                    "verder kijken",
+                    "film verder kijken"
+                ]
+            }
+        },
+        {
+            "id": "command|stop",
+            "importance": 0.8,
+            "triggers": {
+                "en": [
+                    "movie stop",
+                    "movie store",
+                    "moviestop",
+                    "plex stop",
+                    "movie star",
+                    "stop movie",
+                    "stop the movie",
+                    "stop watching",
+                    "watch stop",
+                    "movie starts",
+                    "end movie",
+                    "stop playing",
+                    "movie still"
+                ],
+                "nl": [
+                    "movie stop",
+                    "stop film",
+                    "film stoppen",
+                    "film stop",
+                    "kunststoffen",
+                    "stop met kijken",
+                    "stoppen kijken",
+                    "stop kijken",
+                    "stoppen met kijken"
+                ]
+            }
+        },
+
+		{
+            "id": "command|currentlyplaying",
+            "importance": 0.8,
+            "triggers": {
+                "en": [
+                    "what is currently playing",
+                    "what am I currently watching",
+                    "what am I watching",
+                    "what is playing"
+                ],
+                "nl": [
+                    "woar kiek ik noar",
+                    "waar kijk ik naar",
+                    "wat speelt er nu",
+                    "welke film is dit",
+                    "welke serie is dit",
+                    "welke aflevering is dit"
+                ]
+            }
+        },
+		{
+            "id": "type|movie",
+            "importance": 0.8,
+            "triggers": {
+                "en": [
+                    "movie",
+                    "flick"
+                ],
+                "nl": [
+                    "film",
+                    "filmpje"
+                ]
+            }    
+        },
+        {
+            "id": "type|episode",
+            "importance": 0.8,
+            "triggers": {
+                "en": [
+                    "show",
+                    "shows",
+                    "episode",
+                    "episodes",
+                    "serie",
+                    "series"
+                ],
+                "nl": [
+                    "episode",
+                    "serie",
+                    "aflevering"
+                ]
+            }
+        }
+    ]
+}
