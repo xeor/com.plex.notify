@@ -73,6 +73,7 @@ function websocketListen() {
                 try {
                     var response = JSON.parse(message.utf8Data)
                     Homey.log("Response: ", response)
+                    Homey.log("Response: ", response.NotificationContainer.PlaySessionStateNotification);
                     if(typeof(response._children) != 'undefined' && typeof response._children[0] == "object"){
                         if(response._children[0]._elementType == 'PlaySessionStateNotification'){
                             stateEmitter.emit('PlexSessionState', {"from": "socket", "status":response._children[0].state, "session": response._children[0].sessionKey, "offset": response._children[0].viewOffset, "key": response._children[0].key})
