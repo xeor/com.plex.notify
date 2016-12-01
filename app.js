@@ -26,7 +26,11 @@ module.exports.init = function() {
 	Homey.log('Plex app running...')
 	stateEmitter.on('PlexSession', (data) => {
 		Homey.log('Homey session listener detected event!')
+		if (data.state === 'stopped') {
+		triggerFlow(data.state, { 'Player': 'Rasplex' }) // For testing, need to somehow figure out what player it actually is..
+		} else {
 		matchPlayer(data)
+		}
 	})
 	plexClient = new PlexAPI({
 		hostname: Homey.env.PLEX_HOST,
@@ -89,9 +93,9 @@ function websocketListen() {
 
 function matchPlayer(data) {
 	plexClient.query('/status/sessions/').then(function(result) {
-		// Homey.log('Sessions Data: ', result)
+		Homey.log('Sessions Data: ', result)
 		var metadata = result.MediaContainer.Metadata
-		// Homey.log('Metadata: ', metadata)
+		Homey.log('Metadata: ', metadata)
 
 		var found = getPlayer(data.key);
 
@@ -109,8 +113,9 @@ function matchPlayer(data) {
 			Homey.log('Player is in watchlist')
 			if (lastState != data.state) {
 				Homey.log('State has changed')
-				var token = { 'Player': found[0].Player.title }
-				PlayingEventFired(lastState, data.state, token)
+				var tokens = { 'Player': found[0].Player.title }
+				lastState = data.state;
+				playingEventFired(data.state, tokens)
 			} 
 			else {
 				Homey.log('State has not changed')
@@ -127,22 +132,21 @@ function matchPlayer(data) {
 	})
 }
 
-function PlayingEventFired(lastState, newState, token) {
-	Homey.log('Last state: ', lastState)
+// Trigger flow cards
+function playingEventFired(newState, tokens) {
+	
+	if(newState === 'buffering'){
+	Homey.log('New state: Buffering (IGNORED)')
+    return
+    }
+    
 	Homey.log('New state: ', newState)
-	Homey.log('Token: ', token)
-	triggerDevice(newState, token)
+	Homey.log('Token: ', tokens)
+	triggerFlow(newState, tokens)
 }
 
 // Trigger card helper function to add some debug information
-function triggerDevice(eventName, token, callback) {
-	console.log('[Trigger Flow card]' + eventName);
-		
-	if (typeof callback !== 'function') {
-		callback = (err, result) => {
-			if (err) return Homey.error(err);
-		}
-	}
-
-	Homey.manager('flow').triggerDevice(eventName, token, callback);
+function triggerFlow(eventName, tokens, callback) {
+	console.log('[Trigger Flow]: ', eventName, tokens);
+	Homey.manager('flow').trigger(eventName, tokens, null, callback)
 }

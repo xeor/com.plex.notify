@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
+</head>
+<body>
+    <h1>Plex Notify Settings</h1>
+    <fieldset>
+        <legend><span>Plex credentials</span></legend>
+        <p>Please enter your Plex owner credentials.</p>
+        <div class="field row">
+            <label style="width: 260px;"><span>Username</span></label>
+            <label style="width: 260px;"><span>Password</span></label>
+        </div>
+        <div class="field row new_credentials">
+            <input class="credentials_username" name="credentials_username" type="text" value=""/>
+            <input class="credentials_password" name="credentials_password" type="password" value=""/>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend><span>Plex server information</span></legend>
+        <p>Please enter the static IP and port of your Plex server - it must be on the same network as Homey.</p>
+        <div class="field row">
+            <label style="width: 260px;"><span>IP Adress</span></label>
+            <label style="width: 260px;"><span>Port</span></label>
+        </div>
+        <div class="field row new_server">
+            <input class="server_ip" name="server_ip" type="text" value=""/>
+            <input class="server_port" name="server_port" type="text" value=""/>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend><span>Plex devices</span></legend>
+        <p>For Homey to detect the correct player events need to use the exact device name.</p>
+        <p>This can be found in the devices section of your server settings.</p>
+        <div class="field row">
+            <label style="width: 260px;"><span>Device Nickname</span></label>
+        </div>
+        <div class="field row new_device">
+            <input class="device_name" name="device_names[]" type="text" value=""/>
+        </div>
+        <div class="field row add_device">
+            <button id="add" class="left" onclick="addDevice()">Add device</button>
+        </div>
+    </fieldset>
+
+    <button id="save" class="left" onclick="saveSettings()">Save settings</button>
+
+    <script type="text/javascript">
+      function onHomeyReady() {
+        // Hide some elements initially.
+        $('.new_device').hide()
+
+        // Fill input with already stored settings.
+        Homey.get('devices', function (err, devices) {
+          if (devices) {
+            for (var i = 0; i < devices.length; i++) {
+              var device = devices[i]
+              var newDevice = $(".new_device").clone()
+              var delButton = $('<button id="delete" onClick="deleteEntry('+ i +')"><i class="fa fa-trash-o"></i></button>')
+              newDevice.removeClass("new_device").addClass('device_data')
+              $(".device_name", newDevice).val(device.name)
+              newDevice.append(delButton)
+              newDevice.insertBefore(".add_device").show()
+            }
+          }
+          // We're ready!
+          Homey.ready()
+        })
+      }
+
+      function deleteEntry(num) {
+        $('.device_data')[num].remove()
+      }
+
+      function addDevice() {
+        var newDevice = $(".new_device").clone()
+        var delButton = $('<button id="delete" onClick="deleteEntry('+ $('.device_data').size() +')"><i class="fa fa-trash-o"></i></button>')
+        newDevice.removeClass("new_device").addClass('device_data')
+        $(".device_name", newDevice).val("")
+        newDevice.append(delButton)
+        newDevice.insertBefore(".add_device").show()
+        $(".device_name", newDevice).focus()
+      }
+
+      function saveSettings() {
+        console.log("Saving settings...")
+        var devices = []
+        var deviceNAMES = $('.device_data > input[name^=device_names]').map((idx, elem) => $(elem).val()).get()
+
+        for (var i = 0; i < deviceNAMES.length; i++) {
+          if (deviceNAMES[i].length > 0) {
+            devices.push({name: deviceNAMES[i]})
+          } else {
+            setSaveButton("red", "white", __("settings.errorIncomplete"))
+            return resetSaveButton()
+          }
+        }
+        Homey.set("devices", devices)
+        console.log("Settings saved successfull.")
+        setSaveButton("green", "white", __("settings.saved"))
+        resetSaveButton()
+      }
+
+      function resetSaveButton() {
+        setTimeout(function() {
+          setSaveButton("", "black", __("settings.buttonSave"))
+        }, 3000)
+      }
+
+      function setSaveButton(backgroundColor, color, innerHtml) {
+        var btnSave = document.getElementById("save")
+        btnSave.style["background-color"] = backgroundColor
+        btnSave.style["color"] = color
+        btnSave.innerHTML = innerHtml
+      }
+    </script>
+  </body>
+</html>

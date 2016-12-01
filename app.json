@@ -1,6 +1,6 @@
 {
     "id": "com.plex.notify",
-    "version": "1.2.0",
+    "version": "1.0.0",
     "compatibility": "0.x || 1.x",
     "name": {
         "en": "Plex Notify"
@@ -40,15 +40,36 @@
                "id" : "stopped",
                 "title": { 
                     "en": "Plex stops playing"
-                }
+                },
+                "tokens": [
+                    {
+                        "name": "player",
+                        "title": {
+                            "en": "Player"
+                        },
+                        "example": {
+                            "en": "Rasplex"
+                        }
+                    }
+                ]
             },
             {
                "id" : "paused",
                 "title": { 
                     "en": "Plex pauses"
-                } 
+                },
+                "tokens": [
+                    {
+                        "name": "player",
+                        "title": {
+                            "en": "Player"
+                        },
+                        "example": {
+                            "en": "Rasplex"
+                        }
+                    }
+                ]
             }
-
         ]
     }
 }
