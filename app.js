@@ -26,6 +26,7 @@ module.exports.init = function() {
 		Homey.log('Homey session listener detected event!')
 		if (data.state === 'stopped') {
 			if (playerSessions[data.key]) {
+				Homey.log('New state: ', data.state')
 				playerStates[playerSessions[data.key]] = data.state
 				triggerFlow(data.state, {
 					'player': playerSessions[data.key]
@@ -147,6 +148,6 @@ function playingEventFired(newState, tokens) {
 
 // Trigger card helper function to add some debug information
 function triggerFlow(eventName, tokens, callback) {
-	console.log('[Trigger Flow]: ', eventName, tokens);
+	Homey.log('[Trigger Flow]: ', eventName, tokens);
 	Homey.manager('flow').trigger(eventName, tokens, null, callback)
 }
