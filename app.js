@@ -25,11 +25,15 @@ module.exports.init = function() {
 	stateEmitter.on('PlexSession', (data) => {
 		Homey.log('Homey session listener detected event!')
 		if (data.state === 'stopped') {
-		playerStates[playerSessions[data.key]] = data.state
-		triggerFlow(data.state, { 'player': playerSessions[data.key] })
-		delete playerSessions[data.key]
+			if (playerSessions[data.key]) {
+				playerStates[playerSessions[data.key]] = data.state
+				triggerFlow(data.state, {
+					'player': playerSessions[data.key]
+				})
+			}
+			delete playerSessions[data.key]
 		} else {
-		matchPlayer(data)
+			matchPlayer(data)
 		}
 	})
 	plexClient = new PlexAPI({
@@ -67,11 +71,11 @@ function websocketListen() {
 				try {
 					// Homey.log("Incoming message: ", message)
 					var parsed = JSON.parse(message.utf8Data)
-					// Homey.log('Parsed: ', parsed)
+						// Homey.log('Parsed: ', parsed)
 					var data = parsed.NotificationContainer
-					// Homey.log('Data: ', data)
+						// Homey.log('Data: ', data)
 					var type = data.type
-					// Homey.log('Type: ', type)
+						// Homey.log('Type: ', type)
 					if (type === 'playing') {
 						Homey.log('Detected session...')
 						Homey.log('Found session: ', data.PlaySessionStateNotification)
@@ -113,15 +117,16 @@ function matchPlayer(data) {
 		Homey.log('Player is in watchlist')
 		if (playerStates[found[0].Player.title] != data.state) {
 			Homey.log('State has changed')
-			var tokens = { 'player': found[0].Player.title }
+			var tokens = {
+				'player': found[0].Player.title
+			}
 			playerStates[found[0].Player.title] = data.state
 			playingEventFired(data.state, tokens)
-		} 
-		else {
+		} else {
 			Homey.log('State has not changed')
 			playerStates[found[0].Player.title] = data.state
 		}
-      
+
 	}, function(err) {
 		Homey.log('Could not connect to server: ', err)
 	})
@@ -129,12 +134,12 @@ function matchPlayer(data) {
 
 // Trigger flow cards
 function playingEventFired(newState, tokens) {
-	
-	if(newState === 'buffering'){
-	Homey.log('New state: Buffering (IGNORED)')
-    return
-    }
-    
+
+	if (newState === 'buffering' || newState === 'error') {
+		Homey.log('New state: Ignored state')
+		return
+	}
+
 	Homey.log('New state: ', newState)
 	Homey.log('Token: ', tokens)
 	triggerFlow(newState, tokens)
