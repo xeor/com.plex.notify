@@ -1,120 +1,148 @@
-"use strict"
-
+'use strict'
 var WebSocketClient = require('websocket').client
+var PlexAPI = require('plex-api')
 var EventEmitter = require('events')
 var stateEmitter = new EventEmitter()
 
 var wsclient = null
+var plexClient = null
 
+// If websocket fails, retry after x seconds
+var reconnectInterval = 5000
+
+// Store last player state for comparison
+var lastState = null
+
+// Players to trigger events for
+const playerOne = 'Plex Web (Safari)'
+const playerTwo = 'Rasplex'
+
+// Required information to connect
 const plexIP = Homey.env.PLEX_HOST
 const plexPort = Homey.env.PLEX_PORT
 const plexToken = Homey.env.PLEX_TOKEN
 
-var PlexAPI = require("plex-api")
-
-// const client = new PlexAPI({
-//     hostname: 'null'
-//     username: 'null'
-//     password: 'null'
-// })
-
-const client = new PlexAPI({
-	hostname: Homey.env.PLEX_HOST,
-	username: Homey.env.PLEX_USERNAME,
-	password: Homey.env.PLEX_PASSWORD
-})
-
-client.query("/").then(function(result) {
-	Homey.log("Plex app running...")
-	Homey.log("Server Name: " + result.MediaContainer.friendlyName)
-	Homey.log("Server Version: " + result.MediaContainer.version)
-
-	// array of children, such as Directory or Server items 
-	// will have the .uri-property attached 
-	// Homey.log(result)
-}, function(err) {
-	Homey.log("Could not connect to server", err)
-})
-
-
 module.exports.init = function() {
+	Homey.log('Plex app running...')
+	stateEmitter.on('PlexSession', (data) => {
+		Homey.log('Homey session listener detected event!')
+		matchPlayer(data)
+	})
+	plexClient = new PlexAPI({
+		hostname: Homey.env.PLEX_HOST,
+		username: Homey.env.PLEX_USERNAME,
+		password: Homey.env.PLEX_PASSWORD
+	})
+	plexClient.query('/').then(function(result) {
+		Homey.log('Server Name: ' + result.MediaContainer.friendlyName)
+		Homey.log('Server Version: ' + result.MediaContainer.version)
+	}, function(err) {
+		Homey.log('Could not connect to server: ', err)
+	})
+	websocketListen()
+}
 
-	function websocketListen() {
-
-		wsclient = new WebSocketClient()
-
-		wsclient.on('connectFailed', function(error) {
-			console.log('Connect Error: ' + error.toString())
-			stateEmitter.emit('NotifierState', "socket failed " + error)
-				// Attempt a reconnect:
-			reconnect()
+function websocketListen() {
+	wsclient = new WebSocketClient()
+	wsclient.on('connectFailed', function(error) {
+		Homey.log('WebSocket error: ' + error.toString())
+		setTimeout(websocketListen, reconnectInterval)
+	})
+	wsclient.on('connect', function(connection) {
+		Homey.log('WebSocket connected')
+		connection.on('error', function(error) {
+			Homey.log('WebSocket error: ' + error.toString())
+			setTimeout(websocketListen, reconnectInterval)
 		})
-
-		wsclient.on('connect', function(connection) {
-			console.log('WebSocket Client Connected')
-			stateEmitter.emit('NotifierState', 'Connected')
-
-			// Connect error
-			connection.on('error', function(error) {
-				console.log("Connection Error: " + error.toString())
-				stateEmitter.emit('NotifierState', 'Connection Error')
-				reconnect()
-			})
-
-			//Connect close
-			connection.on('close', function() {
-				console.log('echo-protocol Connection Closed')
-				stateEmitter.emit('NotifierState', 'Connection Closed')
-				reconnect()
-			})
-
-			// Incoming message from plex media server
-			connection.on('message', function(message) {
-				if (message.type === 'utf8') {
-					try {
-						var response = JSON.parse(message.utf8Data)
-						Homey.log("Websocket: ", response)
-						if (typeof(response._children) != 'undefined' && typeof response._children[0] == "object") {
-                    		if(response.NotificationContainer.PlaySessionStateNotification.state == 'stopped' || response.NotificationContainer.PlaySessionStateNotification.state == 'playing' || response.NotificationContainer.PlaySessionStateNotification.state == 'paused'){
-                    		Homey.log("Found play state...")
-								stateEmitter.emit('PlexSessionState', {
-									"from": "socket",
-									"status": response._children[0].state,
-									"session": response._children[0].sessionKey,
-									"offset": response._children[0].viewOffset,
-									"key": response._children[0].key
-								})
-							}
-						}
-					} catch (e) {
-						console.error(e)
+		connection.on('close', function() {
+			Homey.log('WebSocket closed')
+			setTimeout(websocketListen, reconnectInterval)
+		})
+		connection.on('message', function(message) {
+			if (message.type === 'utf8') {
+				try {
+					// Homey.log("Incoming message: ", message)
+					var parsed = JSON.parse(message.utf8Data)
+					// Homey.log('Parsed: ', parsed)
+					var data = parsed.NotificationContainer
+					// Homey.log('Data: ', data)
+					var type = data.type
+					// Homey.log('Type: ', type)
+					if (type === 'playing') {
+						Homey.log('Detected session...')
+						Homey.log('Found session: ', data.PlaySessionStateNotification)
+						Homey.log('Found state: ', data.PlaySessionStateNotification[0].state)
+						stateEmitter.emit('PlexSession', {
+							'state': data.PlaySessionStateNotification[0].state,
+							'key': data.PlaySessionStateNotification[0].sessionKey
+						})
 					}
-
+				} catch (e) {
+					console.error(e)
 				}
-			})
-
-			stateEmitter.on('closeWebSocket', function() {
-				console.log('received socket close event')
-				connection.close()
-			})
-
+			}
 		})
+	})
 
-		function reconnect() {
+	wsclient.connect('ws://' + plexIP + ':' + plexPort + '/:/websockets/notifications?X-Plex-Token=' + plexToken)
+}
 
-			//clear any timers
-			clearTimeout(reconnectTimer)
+function matchPlayer(data) {
+	plexClient.query('/status/sessions/').then(function(result) {
+		// Homey.log('Sessions Data: ', result)
+		var metadata = result.MediaContainer.Metadata
+		// Homey.log('Metadata: ', metadata)
 
-			// Start a new timer and run self.
-			reconnectTimer = setTimeout(function() {
-				if (settings.enableNotifier) {
-					console.log("-- Attempting reconnect websockets")
+		var found = getPlayer(data.key);
+
+		function getPlayer(sessionKey) {
+			return metadata.filter(
+				function(data) {
+					return data.sessionKey == sessionKey
 				}
-				self.enableNotifier(settings.enableNotifier)
-			}, 10000)
+			)
 		}
 
-		wsclient.connect('ws://' + plexIP + ':' + plexPort + '/:/websockets/notifications?X-Plex-Token=' + plexToken)
+		Homey.log('Found player: ', found[0].Player.title)
+
+		if (found[0].Player.title === playerOne) {
+			Homey.log('Player is in watchlist')
+			if (lastState != data.state) {
+				Homey.log('State has changed')
+				var token = { 'Player': found[0].Player.title }
+				PlayingEventFired(lastState, data.state, token)
+			} 
+			else {
+				Homey.log('State has not changed')
+				lastState = data.state
+			}
+		}
+		
+		else {
+		Homey.log('Player not in watchlist')
+		}
+      
+	}, function(err) {
+		Homey.log('Could not connect to server: ', err)
+	})
+}
+
+function PlayingEventFired(lastState, newState, token) {
+	Homey.log('Last state: ', lastState)
+	Homey.log('New state: ', newState)
+	Homey.log('Token: ', token)
+	triggerDevice(newState, token)
+}
+
+// Trigger card helper function to add some debug information
+function triggerDevice(eventName, token, callback) {
+	console.log('[Trigger Flow card]' + eventName);
+		
+	if (typeof callback !== 'function') {
+		callback = (err, result) => {
+			if (err) return Homey.error(err);
+		}
 	}
 
+	Homey.manager('flow').triggerDevice(eventName, token, callback);
 }
