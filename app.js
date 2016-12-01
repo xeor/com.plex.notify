@@ -115,7 +115,7 @@ function matchPlayer(data) {
 
 		if (found[0].Player.title === playerOne) {
 			Homey.log('Player is in watchlist')
-			if (lastState != data.state) {
+			if (playerStates[found[0].Player.title] != data.state) {
 				Homey.log('State has changed')
 				var tokens = { 'player': found[0].Player.title }
 				playerStates[found[0].Player.title] = data.state
