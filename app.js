@@ -28,7 +28,7 @@ module.exports.init = function() {
 	stateEmitter.on('PlexSession', (data) => {
 		Homey.log('Homey session listener detected event!')
 		if (data.state === 'stopped') {
-		triggerFlow(data.state, { 'Player': 'Rasplex' }) // For testing, need to somehow figure out what player it actually is..
+		triggerFlow(data.state, { 'Player': playerSessions[data.key] })
 		} else {
 		matchPlayer(data)
 		}
@@ -109,7 +109,7 @@ function matchPlayer(data) {
 		}
 
 		Homey.log('Found player: ', found[0].Player.title)
-		playerSessions[sessionKey] = found[0].Player.title
+		playerSessions[data.key] = found[0].Player.title
 
 		if (found[0].Player.title === playerOne) {
 			Homey.log('Player is in watchlist')
