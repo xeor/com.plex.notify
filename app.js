@@ -15,10 +15,6 @@ var lastState = null
 var playerSessions = {}
 var playerStates = {}
 
-// Players to trigger events for
-const playerOne = 'Plex Web (Safari)'
-const playerTwo = 'Rasplex'
-
 // Required information to connect
 const plexIP = Homey.env.PLEX_HOST
 const plexPort = Homey.env.PLEX_PORT
@@ -28,8 +24,8 @@ module.exports.init = function() {
 	Homey.log('Plex app running...')
 	stateEmitter.on('PlexSession', (data) => {
 		Homey.log('Homey session listener detected event!')
-		playerStates[playerSessions[data.key]] = data.state
 		if (data.state === 'stopped') {
+		playerStates[playerSessions[data.key]] = data.state
 		triggerFlow(data.state, { 'player': playerSessions[data.key] })
 		delete playerSessions[data.key]
 		} else {
@@ -114,22 +110,16 @@ function matchPlayer(data) {
 		Homey.log('Found player: ', found[0].Player.title)
 		playerSessions[data.key] = found[0].Player.title
 
-		if (found[0].Player.title === playerOne) {
-			Homey.log('Player is in watchlist')
-			if (playerStates[found[0].Player.title] != data.state) {
-				Homey.log('State has changed')
-				var tokens = { 'player': found[0].Player.title }
-				playerStates[found[0].Player.title] = data.state
-				playingEventFired(data.state, tokens)
-			} 
-			else {
-				Homey.log('State has not changed')
-				playerStates[found[0].Player.title] = data.state
-			}
-		}
-		
+		Homey.log('Player is in watchlist')
+		if (playerStates[found[0].Player.title] != data.state) {
+			Homey.log('State has changed')
+			var tokens = { 'player': found[0].Player.title }
+			playerStates[found[0].Player.title] = data.state
+			playingEventFired(data.state, tokens)
+		} 
 		else {
-		Homey.log('Player not in watchlist')
+			Homey.log('State has not changed')
+			playerStates[found[0].Player.title] = data.state
 		}
       
 	}, function(err) {
