@@ -29,6 +29,7 @@ module.exports.init = function() {
 	stateEmitter.on('PlexSession', (data) => {
 		Homey.log('Homey session listener detected event!')
 		if (data.state === 'stopped') {
+		playerStates[found[0].Player.title] = data.state
 		triggerFlow(data.state, { 'player': playerSessions[data.key] })
 		delete playerSessions[data.key]
 		
@@ -119,7 +120,7 @@ function matchPlayer(data) {
 			if (lastState != data.state) {
 				Homey.log('State has changed')
 				var tokens = { 'player': found[0].Player.title }
-				playerStates[found[0].Player.title] = data.state;
+				playerStates[found[0].Player.title] = data.state
 				playingEventFired(data.state, tokens)
 			} 
 			else {
