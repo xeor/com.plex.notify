@@ -12,6 +12,7 @@ var reconnectInterval = 5000
 
 // Store last player state for comparison
 var lastState = null
+var playerSessions = {}
 
 // Players to trigger events for
 const playerOne = 'Plex Web (Safari)'
@@ -108,6 +109,7 @@ function matchPlayer(data) {
 		}
 
 		Homey.log('Found player: ', found[0].Player.title)
+		playerSessions[sessionKey] = found[0].Player.title
 
 		if (found[0].Player.title === playerOne) {
 			Homey.log('Player is in watchlist')
