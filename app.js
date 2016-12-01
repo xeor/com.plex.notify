@@ -13,6 +13,7 @@ var reconnectInterval = 5000
 // Store last player state for comparison
 var lastState = null
 var playerSessions = {}
+var playerStates = {}
 
 // Players to trigger events for
 const playerOne = 'Plex Web (Safari)'
@@ -28,7 +29,9 @@ module.exports.init = function() {
 	stateEmitter.on('PlexSession', (data) => {
 		Homey.log('Homey session listener detected event!')
 		if (data.state === 'stopped') {
-		triggerFlow(data.state, { 'Player': playerSessions[data.key] })
+		triggerFlow(data.state, { 'player': playerSessions[data.key] })
+		delete playerSessions[data.key]
+		
 		} else {
 		matchPlayer(data)
 		}
@@ -115,13 +118,13 @@ function matchPlayer(data) {
 			Homey.log('Player is in watchlist')
 			if (lastState != data.state) {
 				Homey.log('State has changed')
-				var tokens = { 'Player': found[0].Player.title }
-				lastState = data.state;
+				var tokens = { 'player': found[0].Player.title }
+				playerStates[found[0].Player.title] = data.state;
 				playingEventFired(data.state, tokens)
 			} 
 			else {
 				Homey.log('State has not changed')
-				lastState = data.state
+				playerStates[found[0].Player.title] = data.state
 			}
 		}
 		
