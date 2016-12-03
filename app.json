@@ -42,6 +42,15 @@
                         "example": {
                             "en": "Ghostbusters"
                         }
+                    },
+                    {
+                        "name": "user",
+                        "title": {
+                            "en": "User"
+                        },
+                        "example": {
+                            "en": "Mark & Lina"
+                        }
                     }
                 ]
             },
@@ -68,6 +77,15 @@
                         "example": {
                             "en": "Ghostbusters"
                         }
+                    },
+                    {
+                        "name": "user",
+                        "title": {
+                            "en": "User"
+                        },
+                        "example": {
+                            "en": "Mark & Lina"
+                        }
                     }
                 ]
             },
@@ -93,6 +111,15 @@
                         },
                         "example": {
                             "en": "Ghostbusters"
+                        }
+                    },
+                    {
+                        "name": "user",
+                        "title": {
+                            "en": "User"
+                        },
+                        "example": {
+                            "en": "Mark & Lina"
                         }
                     }
                 ]
