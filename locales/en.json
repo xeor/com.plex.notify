@@ -1,0 +1,8 @@
+{
+	"settings":
+	{
+		"buttonSave": "Save settings",
+		"saved": "Settings saved!",
+		"errorIncomplete": "Settings incomplete!"
+	}
+}
