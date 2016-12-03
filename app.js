@@ -150,9 +150,8 @@ function sessionHandler(data) {
 	plexClient.query('/status/sessions/').then(function(result) {
 		Homey.log('[DATA] Sessions Data:', result)
 		
-		var session = result.MediaContainer.filter(data => data.sessionKey === sessionKey)
+		var session = result.MediaContainer.filter(item => item.sessionKey === data.key)
 		
-		Homey.log('[DATA] Metadata:', session)
 		Homey.log('[INFO] Found session:')
 		Homey.log(session)	
 		Homey.log('[INFO] Found player:', session[0].Player.title)
