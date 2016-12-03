@@ -30,7 +30,8 @@ stateEmitter.on('PlexSession', (data) => {
 			playerStates[playerSessions[data.key]] = data.state
 			triggerFlow(data.state, playerSessions[data.key])
 		}
-		delete playerSessions[data.key]
+		console.log('Deleting old session')
+		delete playerSessions[data.key] // Cleanup on stop
 	} else {
 		sessionHandler(data)
 	}
@@ -187,6 +188,9 @@ function playingEventFired(newState, tokens) {
 }
 
 function triggerFlow(eventName, tokens, callback) {
+	if (eventName === 'stopped')
+		console.log('Deleting old state')
+		delete playerSessions[tokens.player] // Cleanup on stop
 	console.log('[TRIGGER FLOW] ' + 'Event: ' + eventName + ' | ' + 'Token:', tokens);
 	Homey.manager('flow').trigger(eventName, tokens, null, callback)
 }
