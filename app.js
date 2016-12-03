@@ -149,32 +149,32 @@ function websocketListen(value) {
 function sessionHandler(data) {
 	plexClient.query('/status/sessions/').then(function(result) {
 		Homey.log('[DATA] Sessions Data:', result)
-		var metadata = result.MediaContainer.filter(data => data.sessionKey === sessionKey)
-		Homey.log('[DATA] Metadata:', metadata)
+		var session = result.MediaContainer.filter(data => data.sessionKey === sessionKey)
+		Homey.log('[DATA] Metadata:', session)
 		
 		Homey.log('[INFO] Found session:')
-		Homey.log(metadata)
+		Homey.log(session)
 		
-		Homey.log('[INFO] Found player:', metadata[0].Player.title)
-		Homey.log('[INFO] Found title:', metadata[0].title)
+		Homey.log('[INFO] Found player:', session[0].Player.title)
+		Homey.log('[INFO] Found title:', session[0].title)
 		
-		playerSessions[data.key] = metadata[0].Player.title
+		playerSessions[data.key] = session[0].Player.title
 		
 		Homey.log('[DATA] Player sessions:')
 		Homey.log(playerSessions)
 		Homey.log('[DATA] Player states:')
 		Homey.log(playerStates)
 		
-		if (playerStates[metadata[0].Player.title] != data.state) {
+		if (playerStates[session[0].Player.title] != data.state) {
 			Homey.log('[INFO] State changed: yes')
 			var tokens = {
-				'player': metadata[0].Player.title
+				'player': session[0].Player.title
 			}
-			playerStates[metadata[0].Player.title] = data.state
+			playerStates[session[0].Player.title] = data.state
 			playingEventFired(data.state, tokens)
 		} else {
 			Homey.log('[INFO] State changed: no')
-			playerStates[metadata[0].Player.title] = data.state
+			playerStates[session[0].Player.title] = data.state
 		}
 	}, function(err) {
 		Homey.log('[ERROR] Could not connect to server:', err)
