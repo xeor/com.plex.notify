@@ -30,7 +30,7 @@ stateEmitter.on('PlexSession', (data) => {
 			playerStates[playerSessions[data.key].player] = data.state
 			triggerFlow(data.state, playerSessions[data.key])
 		}
-		console.log('INFO: Cleaning up old sessions')
+		console.log('[INFO]', playerSessions[data.key].title, 'stopped playing - Cleaning sessions for', playerSessions[data.key].player)
 		delete playerSessions[data.key]
 	} else {
 		sessionHandler(data)
