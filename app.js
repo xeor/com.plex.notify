@@ -149,12 +149,12 @@ function websocketListen(value) {
 function sessionHandler(data) {
 	plexClient.query('/status/sessions/').then(function(result) {
 		Homey.log('[DATA] Sessions Data:', result)
+		
 		var session = result.MediaContainer.filter(data => data.sessionKey === sessionKey)
+		
 		Homey.log('[DATA] Metadata:', session)
-		
 		Homey.log('[INFO] Found session:')
-		Homey.log(session)
-		
+		Homey.log(session)	
 		Homey.log('[INFO] Found player:', session[0].Player.title)
 		Homey.log('[INFO] Found title:', session[0].title)
 		
