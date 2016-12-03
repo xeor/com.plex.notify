@@ -1,5 +1,4 @@
 'use strict'
-
 var WebSocketClient = require('websocket').client
 var PlexAPI = require('plex-api')
 var EventEmitter = require('events')
@@ -12,6 +11,8 @@ var reconnectInterval = 5000
 var plexToken = Homey.env.PLEX_TOKEN
 var playerSessions = {}
 var playerStates = {}
+
+var firstRun = true
 
 // Initialise application
 
@@ -50,19 +51,28 @@ module.exports.appRestart = function appRestart() {
 // Start application
 
 function appStart() {
-	console.log('[START] Plex notifier starting...')
-	// Erase any existing sessions
-	playerSessions= {}
-	// Erase any existing states
-	playerStates = {}
-	// Commence startup logic
-    loginPlex(getCredentials())
-    .then(websocketListen)
-    .catch(function (error) {
-    	console.log('[ERROR] Plex notifier error:', error)
-    	// console.log('[ERROR] Plex notifier will retry in 5 seconds...')
-    	// setTimeout(appStart, reconnectInterval) // Conflicts with appRestart()
-   	})
+    if (!Homey.manager('settings').get('username') || !Homey.manager('settings').get('password') || !Homey.manager('settings').get('ip') || !Homey.manager('settings').get('port')) {
+    	firstRun = true
+    } else {
+    	firstRun = false
+    }
+	if (!firstRun) {
+		console.log('[START] Plex notifier starting...')
+		// Erase any existing sessions
+		playerSessions= {}
+		// Erase any existing states
+		playerStates = {}
+		// Commence startup logic
+    	loginPlex(getCredentials())
+    	.then(websocketListen)
+    	.catch(function (error) {
+    		console.log('[ERROR] Plex notifier error:', error)
+    		// console.log('[ERROR] Plex notifier will retry in 5 seconds...')
+    		// setTimeout(appStart, reconnectInterval) // Conflicts with appRestart()
+   		}) 
+   	} else {
+   	console.log('[ERROR] No settings found - please input settings and save them!')
+   	}
 }
 
 function getCredentials() {
