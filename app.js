@@ -146,44 +146,35 @@ function websocketListen(value) {
 	wsclient.connect('ws://' + plexClient.hostname + ':' + plexClient.port + '/:/websockets/notifications?X-Plex-Token=' + plexToken)
 }
 
-function searchSessions(sessionKey) {
-	return metadata.filter(
-		function(data) {
-			return data.sessionKey == sessionKey
-		}
-	)
-}
-
 function sessionHandler(data) {
 	plexClient.query('/status/sessions/').then(function(result) {
-		Homey.log('[INFO] Sessions Data:', result)
-		var metadata = result.MediaContainer.Metadata
-		Homey.log('[INFO] Metadata:', metadata)
+		Homey.log('[DATA] Sessions Data:', result)
+		var metadata = result.MediaContainer.filter(data => data.sessionKey === sessionKey)
+		Homey.log('[DATA] Metadata:', metadata)
 		
-		var found = searchSessions(data.key)
-		Homey.log('[DATA] Found session:')
-		Homey.log(found)
+		Homey.log('[INFO] Found session:')
+		Homey.log(metadata)
 		
-		Homey.log('[INFO] Found player:', found[0].Player.title)
-		Homey.log('[INFO] Found title:', found[0].title)
+		Homey.log('[INFO] Found player:', metadata[0].Player.title)
+		Homey.log('[INFO] Found title:', metadata[0].title)
 		
-		playerSessions[data.key] = found[0].Player.title
+		playerSessions[data.key] = metadata[0].Player.title
 		
 		Homey.log('[DATA] Player sessions:')
 		Homey.log(playerSessions)
 		Homey.log('[DATA] Player states:')
 		Homey.log(playerStates)
 		
-		if (playerStates[found[0].Player.title] != data.state) {
+		if (playerStates[metadata[0].Player.title] != data.state) {
 			Homey.log('[INFO] State changed: yes')
 			var tokens = {
-				'player': found[0].Player.title
+				'player': metadata[0].Player.title
 			}
-			playerStates[found[0].Player.title] = data.state
+			playerStates[metadata[0].Player.title] = data.state
 			playingEventFired(data.state, tokens)
 		} else {
 			Homey.log('[INFO] State changed: no')
-			playerStates[found[0].Player.title] = data.state
+			playerStates[metadata[0].Player.title] = data.state
 		}
 	}, function(err) {
 		Homey.log('[ERROR] Could not connect to server:', err)
