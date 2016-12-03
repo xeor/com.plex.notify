@@ -33,6 +33,15 @@
                         "example": {
                             "en": "Rasplex"
                         }
+                    },
+                    {
+                        "name": "title",
+                        "title": {
+                            "en": "Title"
+                        },
+                        "example": {
+                            "en": "Ghostbusters"
+                        }
                     }
                 ]
             },
@@ -50,6 +59,15 @@
                         "example": {
                             "en": "Rasplex"
                         }
+                    },
+                    {
+                        "name": "title",
+                        "title": {
+                            "en": "Title"
+                        },
+                        "example": {
+                            "en": "Ghostbusters"
+                        }
                     }
                 ]
             },
@@ -66,6 +84,15 @@
                         },
                         "example": {
                             "en": "Rasplex"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "title": {
+                            "en": "Title"
+                        },
+                        "example": {
+                            "en": "Ghostbusters"
                         }
                     }
                 ]

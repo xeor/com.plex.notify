@@ -64,16 +64,8 @@
         Homey.set('ip', document.getElementById('server_ip').value)
         Homey.set('port', document.getElementById('server_port').value)
         console.log("Settings saved successfully, restarting application")
-        Homey.api('POST', '/restart/')
         setSaveButton("green", "white", __("settings.saved"))
         resetSaveButton()
-      }
-
-      function resetSaveButton() {
-        setTimeout(function() {
-          setSaveButton("", "black", __("settings.buttonSave"))
-          document.getElementById("save").disabled = false
-        }, 3000)
       }
 
       function setSaveButton(backgroundColor, color, innerHtml) {
@@ -83,6 +75,19 @@
         btnSave.style["color"] = color
         btnSave.innerHTML = innerHtml
       }
+      
+      function resetSaveButton() {
+        setTimeout(function() {
+          appRestart() // Not ideal - how to fix it firing too early!?
+          setSaveButton("", "black", __("settings.buttonSave"))
+          document.getElementById("save").disabled = false
+        }, 3000)
+      }
+      
+      function appRestart() {
+        Homey.api('POST', '/restart/')
+      }
+      
     </script>
   </body>
 </html>

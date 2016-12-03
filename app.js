@@ -18,7 +18,7 @@ var playerStates = {}
 // Initialise application
 
 module.exports.init = function() {
-	Homey.log('[INITIALIZE] Please wait...')
+	Homey.log('[INITIALISE] Please wait...')
 	appStart()	
 }
 
@@ -36,7 +36,7 @@ stateEmitter.on('PlexSession', (data) => {
 		}
 		delete playerSessions[data.key]
 	} else {
-		matchPlayer(data)
+		sessionHandler(data)
 	}
 })
 
@@ -54,11 +54,16 @@ module.exports.appRestart = function appRestart() {
 
 function appStart() {
 	Homey.log('[START] Plex notifier starting...')
+	// Erase any existing sessions
+	playerSessions= {}
+	// Erase any existing states
+	playerStates = {}
+	// Commence startup logic
     loginPlex(getCredentials())
     .then(websocketListen)
     .catch(function (error) {
     	Homey.log('[ERROR] Plex notifier error:', error)
-    	// Homey.log('[START] Plex notifier will retry in 5 seconds...')
+    	// Homey.log('[ERROR] Plex notifier will retry in 5 seconds...')
     	// setTimeout(appStart, reconnectInterval) // Conflicts with appRestart()
    	})
 }
@@ -111,15 +116,16 @@ function websocketListen(value) {
 				try {
 					// Homey.log("Incoming message: ", message)
 					var parsed = JSON.parse(message.utf8Data)
-					// Homey.log('[Info] Parsed: ', parsed)
+					// Homey.log('[WEBSOCKET] Parsed: ', parsed)
 					var data = parsed.NotificationContainer
-					// Homey.log('[Info] Data: ', data)
+					// Homey.log('[WEBSOCKET] Data: ', data)
 					var type = data.type
-					// Homey.log('[Info] Type: ', type)
+					// Homey.log('[WEBSOCKET] Type: ', type)
 					if (type === 'playing') {
 						Homey.log('[WEBSOCKET] Detected session...')
-						Homey.log('[WEBSOCKET] Found session:', data.PlaySessionStateNotification)
-						Homey.log('[WEBSOCKET] Found state:', data.PlaySessionStateNotification[0].state)
+						Homey.log('[WEBSOCKET] Found session:')
+						Homey.log(data.PlaySessionStateNotification)
+						Homey.log('[WEBSOCKET] Found state: ', data.PlaySessionStateNotification[0].state)
 						stateEmitter.emit('PlexSession', {
 							'state': data.PlaySessionStateNotification[0].state,
 							'key': data.PlaySessionStateNotification[0].sessionKey
@@ -140,21 +146,34 @@ function websocketListen(value) {
 	wsclient.connect('ws://' + plexClient.hostname + ':' + plexClient.port + '/:/websockets/notifications?X-Plex-Token=' + plexToken)
 }
 
-function matchPlayer(data) {
+function searchSessions(sessionKey) {
+	return metadata.filter(
+		function(data) {
+			return data.sessionKey == sessionKey
+		}
+	)
+}
+
+function sessionHandler(data) {
 	plexClient.query('/status/sessions/').then(function(result) {
 		Homey.log('[INFO] Sessions Data:', result)
 		var metadata = result.MediaContainer.Metadata
 		Homey.log('[INFO] Metadata:', metadata)
-		var found = getPlayer(data.key);
-		function getPlayer(sessionKey) {
-			return metadata.filter(
-				function(data) {
-					return data.sessionKey == sessionKey
-				}
-			)
-		}
+		
+		var found = searchSessions(data.key)
+		Homey.log('[DATA] Found session:')
+		Homey.log(found)
+		
 		Homey.log('[INFO] Found player:', found[0].Player.title)
+		Homey.log('[INFO] Found title:', found[0].title)
+		
 		playerSessions[data.key] = found[0].Player.title
+		
+		Homey.log('[DATA] Player sessions:')
+		Homey.log(playerSessions)
+		Homey.log('[DATA] Player states:')
+		Homey.log(playerStates)
+		
 		if (playerStates[found[0].Player.title] != data.state) {
 			Homey.log('[INFO] State changed: yes')
 			var tokens = {
@@ -182,6 +201,6 @@ function playingEventFired(newState, tokens) {
 }
 
 function triggerFlow(eventName, tokens, callback) {
-	Homey.log('[TRIGGER FLOW ' + 'Event: ' + eventName + ' | ' + 'Token:', tokens);
+	Homey.log('[TRIGGER FLOW] ' + 'Event: ' + eventName + ' | ' + 'Token:', tokens);
 	Homey.manager('flow').trigger(eventName, tokens, null, callback)
 }
