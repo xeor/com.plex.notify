@@ -26,8 +26,10 @@ module.exports.init = function () {
 // Listening events
 stateEmitter.on('PlexEvent', (event) => {
 	console.log('[LISTENER] Homey session listener detected event')
-	if(event.state === 'stopped') {
-		closedSessionHandler(event)
+	if(playerSessions[event.key]) {
+		if(event.state === 'stopped') {
+			closedSessionHandler(event)
+		}
 	}
 	if(event.state === 'playing' || event.state === 'paused') {
 		openSessionHandler(event)
