@@ -22,23 +22,16 @@ module.exports.init = function () {
 }
 
 // Listening events
-stateEmitter.on('PlexSession', (data) => {
+stateEmitter.on('PlexEvent', (event) => {
 	console.log('[LISTENER] Homey session listener detected event')
-	if(data.state === 'stopped') {
-		if(playerSessions[data.key]) {
-			console.log('[INFO] New state:', data.state)
-			playerStates[playerSessions[data.key].player] = data.state
-			triggerFlow(data.state, playerSessions[data.key])
-		}
-		console.log('[INFO]', playerSessions[data.key].title, 'stopped playing - Cleaning data for', playerSessions[data.key].player)
-		delete playerStates[playerSessions[data.key].player]
-		delete playerSessions[data.key]
+	if(event.state === 'stopped') {
+		closedSessionHandler(event)
 	}
-	if(data.state === 'playing' || data.state === 'paused') {
-		sessionHandler(data)
+	if(event.state === 'playing' || event.state === 'paused') {
+		openSessionHandler(event)
 	} else {
-		if(playerSessions[data.key]) {
-			console.log('[ERROR] Unwanted state detected:', data.state)
+		if(playerSessions[event.key]) {
+			console.log('[ERROR] Unwanted state detected:', event.state)
 		}
 	}
 })
@@ -61,11 +54,11 @@ function appStart() {
 	}
 	if(!firstRun) {
 		console.log('[START] Plex notifier starting...')
-		// Erase any existing sessions
+		// Erase existing sessions
 		playerSessions = {}
-		// Erase any existing states
+		// Erase existing states
 		playerStates = {}
-		// Commence startup logic
+		// Commence startup
 		loginPlex(getCredentials()).then(websocketListen).catch(function (error) {
 			console.log('[ERROR] Plex notifier error:', error)
 		})
@@ -86,7 +79,7 @@ function getCredentials() {
 
 function loginPlex(credentials) {
 	console.log('[LOGIN] Plex notifier attempting login...')
-	console.log('[LOGIN] Login credentials:')
+	console.log('[LOGIN] Using login credentials:')
 	console.log(credentials)
 	plexClient = new PlexAPI({
 		hostname: credentials.plexIP,
@@ -101,7 +94,7 @@ function loginPlex(credentials) {
 	})
 }
 
-function websocketListen(value) {
+function websocketListen() {
 	wsclient = new WebSocketClient()
 	wsclient.on('connectFailed', function (error) {
 		console.log('[WEBSOCKET] Error: ' + error.toString())
@@ -128,11 +121,10 @@ function websocketListen(value) {
 					var type = data.type
 					// console.log('[WEBSOCKET] Type: ', type)
 					if(type === 'playing') {
-						console.log('[WEBSOCKET] Detected session...')
-						console.log('[WEBSOCKET] Found session:')
+						console.log('[WEBSOCKET] Detected session:')
 						console.log(data.PlaySessionStateNotification)
-						console.log('[WEBSOCKET] Found state: ', data.PlaySessionStateNotification[0].state)
-						stateEmitter.emit('PlexSession', {
+						console.log('[WEBSOCKET] Detected state: ', data.PlaySessionStateNotification[0].state)
+						stateEmitter.emit('PlexEvent', {
 							'state': data.PlaySessionStateNotification[0].state,
 							'key': data.PlaySessionStateNotification[0].sessionKey
 						})
@@ -146,30 +138,41 @@ function websocketListen(value) {
 	wsclient.connect('ws://' + plexClient.hostname + ':' + plexClient.port + '/:/websockets/notifications?X-Plex-Token=' + plexToken)
 }
 
-function sessionHandler(event) {
+function closedSessionHandler (event) {
+	if(playerSessions[event.key]) {
+		console.log('[INFO] Detected state:', event.state)
+		playerStates[playerSessions[event.key].player] = event.state
+		triggerFlow(event.state, playerSessions[event.key])
+	}
+	console.log('[INFO]', playerSessions[event.key].title, 'stopped playing - Cleaning sessions / states for', playerSessions[event.key].player)
+	delete playerStates[playerSessions[event.key].player]
+	delete playerSessions[event.key]
+}
+
+function openSessionHandler(event) {
 	plexClient.query('/status/sessions/').then(function (result) {
 		console.log('[DATA] Sessions Data:', result)
 		var session = result.MediaContainer.Metadata.filter(item => item.sessionKey === event.key)
-		console.log('[INFO] Found session:')
+		console.log('[INFO] Detected session:')
 		console.log(session)
-		console.log('[INFO] Found player:', session[0].Player.title)
-		console.log('[INFO] Found title:', session[0].title)
-		console.log('[INFO] Found user:', session[0].User.title)
+		console.log('[INFO] Detected player:', session[0].Player.title)
+		console.log('[INFO] Detected title:', session[0].title)
+		console.log('[INFO] Detected user:', session[0].User.title)
 		playerSessions[event.key] = {
 			player: session[0].Player.title,
 			title: session[0].title,
 			user: session[0].User.title
 		}
-		console.log('[DATA] Player sessions:')
+		console.log('[DATA] Sessions:')
 		console.log(playerSessions)
-		console.log('[DATA] Player states:')
+		console.log('[DATA] States:')
 		console.log(playerStates)
 		if(playerStates[session[0].Player.title] != event.state) {
-			console.log('[INFO] State changed: yes')
+			console.log('[INFO] State changed? Yes')
 			playerStates[session[0].Player.title] = event.state
 			triggerFlow(event.state, playerSessions[event.key])
 		} else {
-			console.log('[INFO] State changed: no')
+			console.log('[INFO] State changed? No')
 			playerStates[session[0].Player.title] = event.state
 		}
 	}, function (err) {
@@ -179,11 +182,11 @@ function sessionHandler(event) {
 
 function triggerFlow(newState, tokens) {
 	console.log('[INFO] New state:', newState)
-	console.log('[INFO] Token:', tokens)
+	console.log('[INFO] Tokens:', tokens)
 	triggerFlowHelper(newState, tokens)
 }
 
 function triggerFlowHelper(eventName, tokens, callback) {
-	console.log('[TRIGGER FLOW] ' + 'Event: ' + eventName + ' | ' + 'Token:', tokens)
+	console.log('[TRIGGER FLOW] ' + 'Event: ' + eventName + ' | ' + 'Tokens:', tokens)
 	Homey.manager('flow').trigger(eventName, tokens, null, callback)
 }
