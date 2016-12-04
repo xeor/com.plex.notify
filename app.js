@@ -30,13 +30,16 @@ stateEmitter.on('PlexSession', (data) => {
 			playerStates[playerSessions[data.key].player] = data.state
 			triggerFlow(data.state, playerSessions[data.key])
 		}
-		console.log('[INFO]', playerSessions[data.key].title, 'stopped playing - Cleaning sessions for', playerSessions[data.key].player)
+		console.log('[INFO]', playerSessions[data.key].title, 'stopped playing - Cleaning data for', playerSessions[data.key].player)
+		delete playerStates[playerSessions[data.key].player]
 		delete playerSessions[data.key]
 	}
 	if(data.state === 'playing' || data.state === 'paused') {
 		sessionHandler(data)
 	} else {
-		console.log('[ERROR] Unwanted state detected (Probably buffering or error)')
+		if(playerSessions[data.key]) {
+			console.log('[ERROR] Unwanted state detected:', data.state)
+		}
 	}
 })
 
@@ -164,7 +167,7 @@ function sessionHandler(event) {
 		if(playerStates[session[0].Player.title] != event.state) {
 			console.log('[INFO] State changed: yes')
 			playerStates[session[0].Player.title] = event.state
-			playingEventFired(event.state, playerSessions[event.key])
+			triggerFlow(event.state, playerSessions[event.key])
 		} else {
 			console.log('[INFO] State changed: no')
 			playerStates[session[0].Player.title] = event.state
@@ -174,13 +177,13 @@ function sessionHandler(event) {
 	})
 }
 
-function playingEventFired(newState, tokens) {
+function triggerFlow(newState, tokens) {
 	console.log('[INFO] New state:', newState)
 	console.log('[INFO] Token:', tokens)
-	triggerFlow(newState, tokens)
+	triggerFlowHelper(newState, tokens)
 }
 
-function triggerFlow(eventName, tokens, callback) {
+function triggerFlowHelper(eventName, tokens, callback) {
 	console.log('[TRIGGER FLOW] ' + 'Event: ' + eventName + ' | ' + 'Token:', tokens)
 	Homey.manager('flow').trigger(eventName, tokens, null, callback)
 }
