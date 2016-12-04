@@ -57,29 +57,15 @@
       Homey.ready()
       }
 
-	  function saveSettings() {
+      function saveSettings() {
         console.log("Saving new settings...")
-        Promise.all(
-          new Promise((resolve, reject) => 
-            Homey.set('username', document.getElementById('credentials_username').value, (err) => err ? reject(err) : resolve())
-          ),
-          new Promise((resolve, reject) =>
-            Homey.set('password', document.getElementById('credentials_password').value, (err) => err ? reject(err) : resolve())
-          ),
-          new Promise((resolve, reject) =>
-            Homey.set('ip', document.getElementById('server_ip').value, (err) => err ? reject(err) : resolve())
-          ),
-          new Promise((resolve, reject) =>
-            Homey.set('port', document.getElementById('server_port').value, (err) => err ? reject(err) : resolve())
-          ),
-        ).then(() => {
-          console.log("Settings saved successfully, restarting application")
-          Homey.api('POST', '/restart/')
-          setSaveButton("green", "white", __("settings.saved"))
-          resetSaveButton()
-        }).catch((err) => {
-          console.log("Saving settings failed")
-        })
+        Homey.set('username', document.getElementById('credentials_username').value)
+        Homey.set('password', document.getElementById('credentials_password').value)
+        Homey.set('ip', document.getElementById('server_ip').value)
+        Homey.set('port', document.getElementById('server_port').value)
+        console.log("Settings saved successfully, restarting application")
+        setSaveButton("green", "white", __("settings.saved"))
+        resetSaveButton()
       }
 
       function setSaveButton(backgroundColor, color, innerHtml) {

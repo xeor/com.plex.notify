@@ -94,7 +94,7 @@ function loginPlex(credentials) {
 		'options': {
 			'identifier': 'HomeyPlexNotifier',
 			'deviceName': 'Homey',
-			'version': '1.0',
+			'version': '1.0.0',
 			'product': 'Plex Notify',
 			'platform': 'Plex Home Theater',
 			'device': 'Linux'
