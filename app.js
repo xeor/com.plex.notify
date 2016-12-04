@@ -161,7 +161,7 @@ function closedSessionHandler (event) {
 		console.log('[INFO] Detected state:', event.state)
 		triggerFlow(event.state, playerSessions[event.key])
 	}
-	console.log('[INFO]', playerSessions[event.key].title, 'stopped playing - Cleaning sessions / states for', playerSessions[event.key].player)
+	console.log('[INFO]', playerSessions[event.key].title, 'stopped playing - cleaning sessions / states for', playerSessions[event.key].player)
 	delete playerStates[playerSessions[event.key].player]
 	delete playerSessions[event.key]
 }
