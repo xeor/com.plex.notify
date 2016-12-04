@@ -34,25 +34,25 @@
 
     <script type="text/javascript">
       function onHomeyReady() {
-        Homey.get("username", function(err, username) {
-        	if( err ) return console.error("Could not get username", err)
-        	console.log("Username: ", username)
-        	document.getElementById("credentials_username").value = username
+        Homey.get('username', function(err, username) {
+        	if( err ) return console.error('Could not get username', err)
+        	console.log('Username: ', username)
+        	document.getElementById('credentials_username').value = username
         })
-        Homey.get("password", function(err, password) {
-        	if( err ) return console.error("Could not get password", err)
-        	console.log("Password: ", password)
-        	document.getElementById("credentials_password").value = password
+        Homey.get('password', function(err, password) {
+        	if( err ) return console.error('Could not get password', err)
+        	console.log('Password: ', password)
+        	document.getElementById('credentials_password').value = password
         })
-        Homey.get("ip", function(err, ip) {
-        	if( err ) return console.error("Could not get ip", err)
-        	console.log("IP: ", ip)
-        	document.getElementById("server_ip").value = ip
+        Homey.get('ip', function(err, ip) {
+        	if( err ) return console.error('Could not get ip', err)
+        	console.log('IP: ', ip)
+        	document.getElementById('server_ip').value = ip
         })
-        Homey.get("port", function(err, port) {
-        	if( err ) return console.error("Could not get port", err)
-        	console.log("Port: ", port)
-        	document.getElementById("server_port").value = port
+        Homey.get('port', function(err, port) {
+        	if( err ) return console.error('Could not get port', err)
+        	console.log('Port: ', port)
+        	document.getElementById('server_port').value = port
         })
       Homey.ready()
       }
@@ -61,20 +61,20 @@
         console.log("Saving new settings...")
         Promise.all(
           new Promise((resolve, reject) => 
-            Homey.set("username", document.getElementById("credentials_username").value, (err) => err ? reject(err) : resolve())
+            Homey.set('username', document.getElementById('credentials_username').value, (err) => err ? reject(err) : resolve())
           ),
           new Promise((resolve, reject) =>
-            Homey.set("password", document.getElementById("credentials_password").value, (err) => err ? reject(err) : resolve())
+            Homey.set('password', document.getElementById('credentials_password').value, (err) => err ? reject(err) : resolve())
           ),
           new Promise((resolve, reject) =>
-            Homey.set("ip", document.getElementById("server_ip").value, (err) => err ? reject(err) : resolve())
+            Homey.set('ip', document.getElementById('server_ip').value, (err) => err ? reject(err) : resolve())
           ),
           new Promise((resolve, reject) =>
-            Homey.set("port", document.getElementById("server_port").value, (err) => err ? reject(err) : resolve())
+            Homey.set('port', document.getElementById('server_port').value, (err) => err ? reject(err) : resolve())
           ),
         ).then(() => {
           console.log("Settings saved successfully, restarting application")
-          Homey.api("POST", "/restart/")
+          Homey.api('POST', '/restart/')
           setSaveButton("green", "white", __("settings.saved"))
           resetSaveButton()
         }).catch((err) => {
@@ -99,7 +99,7 @@
       }
       
       function appRestart() {
-        Homey.api("POST", "/restart/")
+        Homey.api('POST', '/restart/')
       }
       
     </script>
