@@ -3,10 +3,10 @@
     "version": "1.0.0",
     "compatibility": "0.x || 1.x",
     "name": {
-        "en": "Plex notify"
+        "en": "Plex Notify"
     },
     "description": {
-        "en": "Trigger Homey with Plex players"
+        "en": "Trigger homey with Plex media players"
     },
     "category": "video",
     "images": {
@@ -49,7 +49,7 @@
                             "en": "User"
                         },
                         "example": {
-                            "en": "Santa Claus"
+                            "en": "Mark & Lina"
                         }
                     }
                 ]
@@ -84,7 +84,7 @@
                             "en": "User"
                         },
                         "example": {
-                            "en": "Santa Claus"
+                            "en": "Mark & Lina"
                         }
                     }
                 ]
@@ -119,7 +119,7 @@
                             "en": "User"
                         },
                         "example": {
-                            "en": "Santa Claus"
+                            "en": "Mark & Lina"
                         }
                     }
                 ]
