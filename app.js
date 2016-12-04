@@ -42,10 +42,10 @@ stateEmitter.on('PlexEvent', (event) => {
 
 // API triggered functions
 module.exports.appRestart = function appRestart() {
-	console.log('[RESTART] Plex notifier detected new settings...')
+	console.log('[RESTART] Plex notify detected new settings...')
 	stateEmitter.emit('closeWebSocket')
 	console.log('[RESTART] Closed any open websockets')
-	console.log('[RESTART] Restarting Plex notifier now...')
+	console.log('[RESTART] Restarting Plex notify now...')
 	appStart()
 }
 
@@ -64,7 +64,7 @@ function appStart() {
 		playerStates = {}
 		// Commence startup
 		loginPlex(getCredentials()).then(websocketListen).catch(function (error) {
-			console.log('[ERROR] Plex notifier error:', error)
+			console.log('[ERROR] Plex notify error:', error)
 		})
 	} else {
 		console.log('[ERROR] No settings found - please input settings and save them!')
@@ -82,7 +82,7 @@ function getCredentials() {
 }
 
 function loginPlex(credentials) {
-	console.log('[LOGIN] Plex notifier attempting login...')
+	console.log('[LOGIN] Plex notify attempting login...')
 	console.log('[LOGIN] Using login credentials:')
 	console.log(credentials)
 	plexUser = PlexAPICredentials({
@@ -94,7 +94,7 @@ function loginPlex(credentials) {
 		'port': credentials.plexPort,
 		'authenticator': plexUser,
 		'options': {
-			'identifier': 'HomeyPlexNotifier',
+			'identifier': 'HomeyPlexNotify',
 			'deviceName': 'Homey',
 			'version': '1.0.0',
 			'product': 'Plex Notify',
