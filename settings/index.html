@@ -10,8 +10,8 @@
         <legend><span>Plex credentials</span></legend>
         <p>Please enter your Plex owner credentials.</p>
         <div class="field row">
-            <label style="width: 260px;"><span>Username</span></label>
-            <label style="width: 260px;"><span>Password</span></label>
+            <label style="width: 260px"><span>Username</span></label>
+            <label style="width: 260px"><span>Password</span></label>
         </div>
         <div class="field row credentials">
             <input class="credentials_username" id="credentials_username" type="text" value=""/>
@@ -22,8 +22,8 @@
         <legend><span>Plex server information</span></legend>
         <p>Please enter the static IP and port of your Plex server - it must be on the same network as Homey.</p>
         <div class="field row">
-            <label style="width: 260px;"><span>IP Adress</span></label>
-            <label style="width: 260px;"><span>Port</span></label>
+            <label style="width: 260px"><span>IP Adress</span></label>
+            <label style="width: 260px"><span>Port</span></label>
         </div>
         <div class="field row server">
             <input class="server_ip" id="server_ip" type="text" value=""/>
@@ -57,15 +57,29 @@
       Homey.ready()
       }
 
-      function saveSettings() {
+	  function saveSettings() {
         console.log("Saving new settings...")
-        Homey.set('username', document.getElementById('credentials_username').value)
-        Homey.set('password', document.getElementById('credentials_password').value)
-        Homey.set('ip', document.getElementById('server_ip').value)
-        Homey.set('port', document.getElementById('server_port').value)
-        console.log("Settings saved successfully, restarting application")
-        setSaveButton("green", "white", __("settings.saved"))
-        resetSaveButton()
+        Promise.all(
+          new Promise((resolve, reject) => 
+            Homey.set('username', document.getElementById('credentials_username').value, (err) => err ? reject(err) : resolve())
+          ),
+          new Promise((resolve, reject) =>
+            Homey.set('password', document.getElementById('credentials_password').value, (err) => err ? reject(err) : resolve())
+          ),
+          new Promise((resolve, reject) =>
+            Homey.set('ip', document.getElementById('server_ip').value, (err) => err ? reject(err) : resolve())
+          ),
+          new Promise((resolve, reject) =>
+            Homey.set('port', document.getElementById('server_port').value, (err) => err ? reject(err) : resolve())
+          ),
+        ).then(() => {
+          console.log("Settings saved successfully, restarting application")
+          Homey.api('POST', '/restart/')
+          setSaveButton("green", "white", __("settings.saved"))
+          resetSaveButton()
+        }).catch((err) => {
+          console.log("Saving settings failed")
+        })
       }
 
       function setSaveButton(backgroundColor, color, innerHtml) {

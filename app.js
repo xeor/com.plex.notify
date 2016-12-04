@@ -1,15 +1,17 @@
 'use strict'
 var WebSocketClient = require('websocket').client
 var PlexAPI = require('plex-api')
+var PlexAPICredentials = require('plex-api/node_modules/plex-api-credentials')
 var EventEmitter = require('events')
 var stateEmitter = new EventEmitter()
 
 var wsclient = null
 var plexClient = null
+var plexUser = null
+var plexToken = null
 
 var reconnectInterval = 5000
 
-var plexToken = Homey.env.PLEX_TOKEN
 var playerSessions = {}
 var playerStates = {}
 
@@ -68,12 +70,12 @@ function appStart() {
 }
 
 function getCredentials() {
-	console.log('[CREDENTIALS] Plex notifier retrieving credentials...')
+	console.log('[CREDENTIALS] Plex notifdier retrieving credentials...')
 	return {
-		plexUsername: Homey.manager('settings').get('username'),
-		plexPassword: Homey.manager('settings').get('password'),
-		plexIP: Homey.manager('settings').get('ip'),
-		plexPort: Homey.manager('settings').get('port'),
+		'plexUsername': Homey.manager('settings').get('username'),
+		'plexPassword': Homey.manager('settings').get('password'),
+		'plexIP': Homey.manager('settings').get('ip'),
+		'plexPort': Homey.manager('settings').get('port'),
 	}
 }
 
@@ -81,11 +83,27 @@ function loginPlex(credentials) {
 	console.log('[LOGIN] Plex notifier attempting login...')
 	console.log('[LOGIN] Using login credentials:')
 	console.log(credentials)
+	plexUser = PlexAPICredentials({
+		'username': credentials.plexUsername,
+		'password': credentials.plexPassword
+	})
 	plexClient = new PlexAPI({
-		hostname: credentials.plexIP,
-		username: credentials.plexUsername,
-		password: credentials.plexPassword,
-		port: credentials.plexPort
+		'hostname': credentials.plexIP,
+		'port': credentials.plexPort,
+		'authenticator': plexUser,
+		'options': {
+			'identifier': 'HomeyPlexNotifier',
+			'deviceName': 'Homey',
+			'version': '1.0',
+			'product': 'Plex Notify',
+			'platform': 'Plex Home Theater',
+			'device': 'Linux'
+		}
+	})
+	plexUser.on('token', function(token){
+		console.log('[TOKEN] Waiting for token...')
+		plexToken = token
+		console.log('[TOKEN] Token found and saved:', token)
 	})
 	return plexClient.query('/').then(function (result) {
 		console.log('[CANDY] Server Name: ' + result.MediaContainer.friendlyName)
@@ -159,9 +177,9 @@ function openSessionHandler(event) {
 		console.log('[INFO] Detected title:', session[0].title)
 		console.log('[INFO] Detected user:', session[0].User.title)
 		playerSessions[event.key] = {
-			player: session[0].Player.title,
-			title: session[0].title,
-			user: session[0].User.title
+			'player': session[0].Player.title,
+			'title': session[0].title,
+			'user': session[0].User.title
 		}
 		console.log('[DATA] Sessions:')
 		console.log(playerSessions)
