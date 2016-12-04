@@ -1,38 +1,38 @@
 <!doctype html>
 <html>
 <head>
-  <meta http-equiv="Cache-Control" content="no-store" />
-  <script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
+  <meta http-equiv='Cache-Control' content='no-store' />
+  <script type='text/javascript' src='/manager/webserver/assets/js/jquery.js'></script>
 </head>
 <body>
     <h1>Plex Notify Settings</h1>
     <fieldset>
         <legend><span>Plex credentials</span></legend>
         <p>Please enter your Plex owner credentials.</p>
-        <div class="field row">
-            <label style="width: 260px"><span>Username</span></label>
-            <label style="width: 260px"><span>Password</span></label>
+        <div class='field row'>
+            <label style='width: 260px'><span>Username</span></label>
+            <label style='width: 260px'><span>Password</span></label>
         </div>
-        <div class="field row credentials">
-            <input class="credentials_username" id="credentials_username" type="text" value=""/>
-            <input class="credentials_password" id="credentials_password" type="password" value=""/>
+        <div class='field row credentials'>
+            <input class='credentials_username' id='credentials_username' type='text' value=''/>
+            <input class='credentials_password' id='credentials_password' type='password' value=''/>
         </div>
     </fieldset>
     <fieldset>
         <legend><span>Plex server information</span></legend>
         <p>Please enter the static IP and port of your Plex server - it must be on the same network as Homey.</p>
-        <div class="field row">
-            <label style="width: 260px"><span>IP Adress</span></label>
-            <label style="width: 260px"><span>Port</span></label>
+        <div class='field row'>
+            <label style='width: 260px'><span>IP Adress</span></label>
+            <label style='width: 260px'><span>Port</span></label>
         </div>
-        <div class="field row server">
-            <input class="server_ip" id="server_ip" type="text" value=""/>
-            <input class="server_port" id="server_port" type="text" value=""/>
+        <div class='field row server'>
+            <input class='server_ip' id='server_ip' type='text' value=''/>
+            <input class='server_port' id='server_port' type='text' value=''/>
         </div>
     </fieldset>
-    <button id="save" class="left" onclick="saveSettings()">Save settings</button>
+    <button id='save' class='left' onclick='saveSettings()'>Save settings</button>
 
-    <script type="text/javascript">
+    <script type='text/javascript'>
       function onHomeyReady() {
         Homey.get('username', function(err, username) {
         	if( err ) return console.error('Could not get username', err)
@@ -58,29 +58,29 @@
       }
 
       function saveSettings() {
-        console.log("Saving new settings...")
+        console.log('Saving new settings...')
         Homey.set('username', document.getElementById('credentials_username').value)
         Homey.set('password', document.getElementById('credentials_password').value)
         Homey.set('ip', document.getElementById('server_ip').value)
         Homey.set('port', document.getElementById('server_port').value)
-        console.log("Settings saved successfully, restarting application")
-        setSaveButton("green", "white", __("settings.saved"))
+        console.log('Settings saved successfully, restarting application')
+        setSaveButton('green', 'white', __('settings.saved'))
         resetSaveButton()
       }
 
       function setSaveButton(backgroundColor, color, innerHtml) {
-      	document.getElementById("save").disabled = true
-        var btnSave = document.getElementById("save")
-        btnSave.style["background-color"] = backgroundColor
-        btnSave.style["color"] = color
+      	document.getElementById('save').disabled = true
+        var btnSave = document.getElementById('save')
+        btnSave.style['background-color'] = backgroundColor
+        btnSave.style['color'] = color
         btnSave.innerHTML = innerHtml
       }
       
       function resetSaveButton() {
         setTimeout(function() {
           appRestart() // Not ideal - how to fix it firing too early!?
-          setSaveButton("", "black", __("settings.buttonSave"))
-          document.getElementById("save").disabled = false
+          setSaveButton('', 'black', __('settings.buttonSave'))
+          document.getElementById('save').disabled = false
         }, 3000)
       }
       
