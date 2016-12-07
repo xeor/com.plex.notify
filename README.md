@@ -8,7 +8,7 @@ What works:
 * Pause
 * Stop
 
-The app used tags that supports the following: player name, media title, plex user.
+The app uses tokens that support the following: player name, media title, plex user.
 
 What doesn't:
 
