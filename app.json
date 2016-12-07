@@ -18,112 +18,96 @@
         "email": "markaswift@gmail.com"
     },
     "flow": {
-        "triggers": [
-            {
-                "id" : "playing",
-                "title": { 
-                    "en": "Plex starts playing"
-                },
-                "tokens": [
-                    {
-                        "name": "player",
-                        "title": {
-                            "en": "Player"
-                        },
-                        "example": {
-                            "en": "Rasplex"
-                        }
-                    },
-                    {
-                        "name": "title",
-                        "title": {
-                            "en": "Title"
-                        },
-                        "example": {
-                            "en": "Ghostbusters"
-                        }
-                    },
-                    {
-                        "name": "user",
-                        "title": {
-                            "en": "User"
-                        },
-                        "example": {
-                            "en": "Mark & Lina"
-                        }
-                    }
-                ]
+        "triggers": [{
+            "id": "playing",
+            "title": {
+                "en": "Plex starts playing"
             },
-            {
-               "id" : "stopped",
-                "title": { 
-                    "en": "Plex stops playing"
+            "tokens": [{
+                "name": "player",
+                "title": {
+                    "en": "Player"
                 },
-                "tokens": [
-                    {
-                        "name": "player",
-                        "title": {
-                            "en": "Player"
-                        },
-                        "example": {
-                            "en": "Rasplex"
-                        }
-                    },
-                    {
-                        "name": "title",
-                        "title": {
-                            "en": "Title"
-                        },
-                        "example": {
-                            "en": "Ghostbusters"
-                        }
-                    },
-                    {
-                        "name": "user",
-                        "title": {
-                            "en": "User"
-                        },
-                        "example": {
-                            "en": "Mark & Lina"
-                        }
-                    }
-                ]
+                "example": {
+                    "en": "Rasplex"
+                }
+            }, {
+                "name": "title",
+                "title": {
+                    "en": "Title"
+                },
+                "example": {
+                    "en": "Ghostbusters"
+                }
+            }, {
+                "name": "user",
+                "title": {
+                    "en": "User"
+                },
+                "example": {
+                    "en": "Mark & Lina"
+                }
+            }]
+        }, {
+            "id": "stopped",
+            "title": {
+                "en": "Plex stops playing"
             },
-            {
-               "id" : "paused",
-                "title": { 
-                    "en": "Plex pauses"
+            "tokens": [{
+                "name": "player",
+                "title": {
+                    "en": "Player"
                 },
-                "tokens": [
-                    {
-                        "name": "player",
-                        "title": {
-                            "en": "Player"
-                        },
-                        "example": {
-                            "en": "Rasplex"
-                        }
-                    },
-                    {
-                        "name": "title",
-                        "title": {
-                            "en": "Title"
-                        },
-                        "example": {
-                            "en": "Ghostbusters"
-                        }
-                    },
-                    {
-                        "name": "user",
-                        "title": {
-                            "en": "User"
-                        },
-                        "example": {
-                            "en": "Mark & Lina"
-                        }
-                    }
-                ]
-            }
-        ]
+                "example": {
+                    "en": "Rasplex"
+                }
+            }, {
+                "name": "title",
+                "title": {
+                    "en": "Title"
+                },
+                "example": {
+                    "en": "Ghostbusters"
+                }
+            }, {
+                "name": "user",
+                "title": {
+                    "en": "User"
+                },
+                "example": {
+                    "en": "Mark & Lina"
+                }
+            }]
+        }, {
+            "id": "paused",
+            "title": {
+                "en": "Plex pauses"
+            },
+            "tokens": [{
+                "name": "player",
+                "title": {
+                    "en": "Player"
+                },
+                "example": {
+                    "en": "Rasplex"
+                }
+            }, {
+                "name": "title",
+                "title": {
+                    "en": "Title"
+                },
+                "example": {
+                    "en": "Ghostbusters"
+                }
+            }, {
+                "name": "user",
+                "title": {
+                    "en": "User"
+                },
+                "example": {
+                    "en": "Mark & Lina"
+                }
+            }]
+        }]
     }
 }
