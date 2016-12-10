@@ -171,8 +171,8 @@ function closedSessionHandler(event) {
 function openSessionHandler(event) {
     plexClient.query('/status/sessions/').then(function(result) {
         console.log('[DATA] Sessions Data:', result)
-        // Check for the right containers
-        if(result.MediaContainer.Video) {
+            // Check for the right container
+        if (result.MediaContainer.Video) {
             var container = result.MediaContainer.Video
         } else {
             var container = result.MediaContainer.Metadata
