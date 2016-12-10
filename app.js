@@ -171,7 +171,7 @@ function closedSessionHandler(event) {
 function openSessionHandler(event) {
     plexClient.query('/status/sessions/').then(function(result) {
         console.log('[DATA] Sessions Data:', result)
-        var session = result.MediaContainer.Metadata.filter(item => item.sessionKey === event.key)
+        var session = result.MediaContainer.Video.filter(item => item.sessionKey === event.key)
         console.log('[INFO] Detected session:')
         console.log(session)
         console.log('[INFO] Detected player:', session[0].Player.title)
