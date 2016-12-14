@@ -182,10 +182,12 @@ function openSessionHandler(event) {
         console.log(session)
         console.log('[INFO] Detected player:', session[0].Player.title)
         console.log('[INFO] Detected title:', session[0].title)
+        console.log('[INFO] Detected type:', session[0].type)
         console.log('[INFO] Detected user:', session[0].User.title)
         playerSessions[event.key] = {
             'player': session[0].Player.title,
             'title': session[0].title,
+            'type': session[0].type,
             'user': session[0].User.title
         }
         console.log('[DATA] Sessions:')

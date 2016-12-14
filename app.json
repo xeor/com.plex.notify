@@ -40,6 +40,14 @@
                     "en": "Ghostbusters"
                 }
             }, {
+                "name": "type",
+                "title": {
+                    "en": "Type"
+                },
+                "example": {
+                    "en": "Movie"
+                }
+            }, {
                 "name": "user",
                 "title": {
                     "en": "User"
@@ -70,6 +78,14 @@
                     "en": "Ghostbusters"
                 }
             }, {
+                "name": "type",
+                "title": {
+                    "en": "Type"
+                },
+                "example": {
+                    "en": "Movie"
+                }
+            }, {
                 "name": "user",
                 "title": {
                     "en": "User"
@@ -98,6 +114,14 @@
                 },
                 "example": {
                     "en": "Ghostbusters"
+                }
+            }, {
+                "name": "type",
+                "title": {
+                    "en": "Type"
+                },
+                "example": {
+                    "en": "Movie"
                 }
             }, {
                 "name": "user",
