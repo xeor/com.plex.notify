@@ -23,13 +23,16 @@
             "title": {
                 "en": "Plex starts playing"
             },
+            "hint": {
+                "en": "Cards can use the following tokens. PLAYER: The player name as reported by Plex. USER: The username of the person playing the media. TITLE: The current title of the playing media, i.e. 'Ghostbusters'. TYPE: The type of media playing, available options are 'movie', 'show', 'track', 'picture'."
+            },
             "tokens": [{
-                "name": "player",
+                "name": "type",
                 "title": {
-                    "en": "Player"
+                    "en": "Type"
                 },
                 "example": {
-                    "en": "Rasplex"
+                    "en": "Movie"
                 }
             }, {
                 "name": "title",
@@ -40,20 +43,20 @@
                     "en": "Ghostbusters"
                 }
             }, {
-                "name": "type",
-                "title": {
-                    "en": "Type"
-                },
-                "example": {
-                    "en": "Movie"
-                }
-            }, {
                 "name": "user",
                 "title": {
                     "en": "User"
                 },
                 "example": {
                     "en": "Mark & Lina"
+                }
+            }, {
+                "name": "player",
+                "title": {
+                    "en": "Player"
+                },
+                "example": {
+                    "en": "Rasplex"
                 }
             }]
         }, {
@@ -61,13 +64,16 @@
             "title": {
                 "en": "Plex stops playing"
             },
+            "hint": {
+                "en": "Cards can use the following tokens. PLAYER: The player name as reported by Plex. USER: The username of the person playing the media. TITLE: The current title of the playing media, i.e. 'Ghostbusters'. TYPE: The type of media playing, available options are 'movie', 'show', 'track', 'picture'."
+            },
             "tokens": [{
-                "name": "player",
+                "name": "type",
                 "title": {
-                    "en": "Player"
+                    "en": "Type"
                 },
                 "example": {
-                    "en": "Rasplex"
+                    "en": "Movie"
                 }
             }, {
                 "name": "title",
@@ -78,20 +84,20 @@
                     "en": "Ghostbusters"
                 }
             }, {
-                "name": "type",
-                "title": {
-                    "en": "Type"
-                },
-                "example": {
-                    "en": "Movie"
-                }
-            }, {
                 "name": "user",
                 "title": {
                     "en": "User"
                 },
                 "example": {
                     "en": "Mark & Lina"
+                }
+            }, {
+                "name": "player",
+                "title": {
+                    "en": "Player"
+                },
+                "example": {
+                    "en": "Rasplex"
                 }
             }]
         }, {
@@ -99,13 +105,16 @@
             "title": {
                 "en": "Plex pauses"
             },
+            "hint": {
+                "en": "Cards can use the following tokens. PLAYER: The player name as reported by Plex. USER: The username of the person playing the media. TITLE: The current title of the playing media, i.e. 'Ghostbusters'. TYPE: The type of media playing, available options are 'movie', 'show', 'track', 'picture'."
+            },
             "tokens": [{
-                "name": "player",
+                "name": "type",
                 "title": {
-                    "en": "Player"
+                    "en": "Type"
                 },
                 "example": {
-                    "en": "Rasplex"
+                    "en": "Movie"
                 }
             }, {
                 "name": "title",
@@ -116,20 +125,20 @@
                     "en": "Ghostbusters"
                 }
             }, {
-                "name": "type",
-                "title": {
-                    "en": "Type"
-                },
-                "example": {
-                    "en": "Movie"
-                }
-            }, {
                 "name": "user",
                 "title": {
                     "en": "User"
                 },
                 "example": {
                     "en": "Mark & Lina"
+                }
+            }, {
+                "name": "player",
+                "title": {
+                    "en": "Player"
+                },
+                "example": {
+                    "en": "Rasplex"
                 }
             }]
         }]
