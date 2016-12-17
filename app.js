@@ -28,10 +28,12 @@ stateEmitter.on('PlexEvent', (event) => {
     console.log('[LISTENER] Homey session listener detected event')
     if (playerSessions[event.key]) {
         if (event.state === 'stopped') {
+            console.log('[LISTENER] state detected : stopped')
             closedSessionHandler(event)
         }
     }
     if (event.state === 'playing' || event.state === 'paused') {
+        console.log('[LISTENER] state detected : playing | paused')
         openSessionHandler(event)
     } else {
         if (playerSessions[event.key]) {
@@ -170,7 +172,8 @@ function closedSessionHandler(event) {
 
 function openSessionHandler(event) {
     plexClient.query('/status/sessions/').then(function(result) {
-        console.log('[DATA] Sessions Data:', result)
+        console.log('[DATA] Event state:', event.state)
+        console.log('[DATA] Sessions data:', result)
             // Check for the right container
         if (result.MediaContainer.Video) {
             var container = result.MediaContainer.Video
