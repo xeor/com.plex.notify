@@ -83,7 +83,9 @@ function getCredentials() {
 
 function loginPlex(credentials) {
     console.log('[LOGIN] Plex notify attempting login...')
+        // For debugging
     console.log('[LOGIN] Using login credentials:')
+        // For debugging
     console.log(credentials)
     plexUser = PlexAPICredentials({
         'username': credentials.plexUsername,
@@ -105,6 +107,8 @@ function loginPlex(credentials) {
     plexUser.on('token', function(token) {
         console.log('[TOKEN] Waiting for token...')
         plexToken = token
+        console.log('[TOKEN] Token found and saved')
+            // For debugging
         console.log('[TOKEN] Token found and saved:', token)
     })
     return plexClient.query('/').then(function(result) {
