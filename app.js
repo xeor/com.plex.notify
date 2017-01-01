@@ -236,3 +236,19 @@ function triggerFlowHelper(eventName, tokens, callback) {
     console.log('[TRIGGER FLOW] ' + 'State: ' + eventName + ' | ' + 'Tokens:', tokens)
     Homey.manager('flow').trigger(eventName, tokens, null, callback)
 }
+
+// Condition cards
+
+Homey.manager('flow').on('condition.is_playing', function(callback, args) {
+    var playing_boolean = playerStates[args.player] === 'playing'
+    console.log("Playing boolean: " + args.player + " is " + playing_boolean)
+    Homey.log("[CONDITION FLOW] Is | Is not playing?: " + args.player + " is playing '" + playing_boolean + "'")
+    callback(null, playing_boolean)
+})
+
+Homey.manager('flow').on('condition.is_paused', function(callback, args) {
+    var paused_boolean = playerStates[args.player] === 'paused'
+    console.log("Playing boolean: " + args.player + " is " + paused_boolean)
+    Homey.log("[CONDITION FLOW] Is | Is not paused?: " + args.player + " is playing '" + paused_boolean + "'")
+    callback(null, paused_boolean)
+})

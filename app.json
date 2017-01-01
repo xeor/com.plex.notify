@@ -141,6 +141,37 @@
                     "en": "Rasplex"
                 }
             }]
+        }],
+        "conditions": [{
+            "id": "is_playing",
+            "title": {
+                "en": "!{{Is playing|Is not playing}}"
+            },
+            "hint": {
+                "en": "Cards can use the following tokens. PLAYER: The player name as reported by Plex."
+            },
+            "args": [{
+                "name": "player",
+                "type": "text",
+                "placeholder": {
+                    "en": "Player name"
+                }
+            }]
+        }, {
+            "id": "is_paused",
+            "title": {
+                "en": "!{{Is paused|Is not paused}}"
+            },
+            "hint": {
+                "en": "Cards can use the following tokens. PLAYER: The player name as reported by Plex."
+            },
+            "args": [{
+                "name": "player",
+                "type": "text",
+                "placeholder": {
+                    "en": "Player name"
+                }
+            }]
         }]
     }
 }
