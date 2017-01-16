@@ -21,7 +21,7 @@ What doesn't work?
 
 CHANGELOG
 
-v1.0.2
+v1.0.3
 
 * Added 'type' token to flow cards
 * Added help tip to flow cards to explain options
