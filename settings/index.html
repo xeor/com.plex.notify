@@ -32,17 +32,6 @@
             <input class='server_port' id='server_port' type='text' value='' />
         </div>
     </fieldset>
-    <fieldset>
-        <legend><span>Plex token override</span></legend>
-        <p>If you're having issues geting a token, you can insert one manually here. Please see <a href="https://support.plex.tv/hc/en-us/articles/204059436-Finding-an-authentication-token-X-Plex-Token">how to retrieve a token.</a> </p>
-        <p>***This should only be used in extreme circumstances when the automatic token logic isn't working***</p>
-        <div class='field row'>
-            <label style='width: 260px'><span>Plex token</span></label>
-        </div>
-        <div class='field row server'>
-            <input class='server_token_override' id='server_token_override' type='password' value='' />
-        </div>
-    </fieldset>
     <button id='save' class='left' onclick='saveSettings()'>Save settings</button>
 
     <script type='text/javascript'>
@@ -67,11 +56,6 @@
                 console.log('Port: ', port)
                 document.getElementById('server_port').value = port
             })
-            Homey.get('token_override', function(err, token_override) {
-                if (err) return console.error('Could not get token', err)
-                console.log('Token: ', token_override)
-                document.getElementById('server_token_override').value = token_override
-            })
             Homey.ready()
         }
 
@@ -89,9 +73,6 @@
                 ),
                 new Promise((resolve, reject) =>
                     Homey.set('port', document.getElementById('server_port').value, (err) => err ? reject(err) : resolve())
-                ),
-                new Promise((resolve, reject) =>
-                    Homey.set('token_override', document.getElementById('server_token_override').value, (err) => err ? reject(err) : resolve())
                 ),
             ]).then(() => {
                 console.log("Settings saved successfully, restarting application")

@@ -78,7 +78,6 @@ function getCredentials() {
         'plexPassword': Homey.manager('settings').get('password'),
         'plexIP': Homey.manager('settings').get('ip'),
         'plexPort': Homey.manager('settings').get('port'),
-        'plexToken': Homey.manager('settings').get('token_override'),
     }
 }
 
@@ -95,7 +94,6 @@ function loginPlex(credentials) {
         'hostname': credentials.plexIP,
         'port': credentials.plexPort,
         'authenticator': plexUser,
-        'token': plexToken,
         'options': {
             'identifier': 'HomeyPlexNotify',
             'deviceName': 'Homey',
