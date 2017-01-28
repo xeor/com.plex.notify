@@ -94,8 +94,8 @@ function loginPlex(credentials) {
     plexClient = new PlexAPI({
         'hostname': credentials.plexIP,
         'port': credentials.plexPort,
-        'token': plexToken,
         'authenticator': plexUser,
+        'token': plexToken,
         'options': {
             'identifier': 'HomeyPlexNotify',
             'deviceName': 'Homey',
