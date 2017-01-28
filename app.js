@@ -78,6 +78,7 @@ function getCredentials() {
         'plexPassword': Homey.manager('settings').get('password'),
         'plexIP': Homey.manager('settings').get('ip'),
         'plexPort': Homey.manager('settings').get('port'),
+        // Added to allow manual token entry
         'plexToken': Homey.manager('settings').get('token_override'),
     }
 }
@@ -94,7 +95,8 @@ function loginPlex(credentials) {
     plexClient = new PlexAPI({
         'hostname': credentials.plexIP,
         'port': credentials.plexPort,
-        'token': plexToken,
+        // Used if manual token entered
+        'token': credentials.plexToken,
         'authenticator': plexUser,
         'options': {
             'identifier': 'HomeyPlexNotify',
