@@ -21,6 +21,10 @@ What doesn't work?
 
 CHANGELOG
 
+v1.0.4
+
+* Adding `https` setting, in case you have forced ssl/tls enabled on your plex.
+
 v1.0.3
 
 * Added 'type' token to flow cards
